@@ -4,18 +4,20 @@ module Api
 
       private
 
-      def find_user
-        id = params[:user_id] || params[:id]
-        @user ||= User.find_by(id: id)
+      def user
+        @user ||= User.find_by(id: params[:user_id] || params[:id])
       end
 
-      def find_course
-        id = params[:course_id] || params[:id]
-        @course ||= Course.find_by(id: id)
+      def course
+        @course ||= Course.find_by(id: params[:course_id] || params[:id])
       end
 
-      def find_lesson
+      def lesson
         @lesson ||= Lesson.find(params[:id])
+      end
+
+      def promo_code
+        @promo_code ||= PromoCode.find(params[:promo_code_id] || params[:id])
       end
     end
   end

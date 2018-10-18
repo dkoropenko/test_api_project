@@ -5,18 +5,18 @@ module Api
       private
 
       def user
-        @user ||= User.find_by_id(params[:user_id] || params[:id])
+        @user ||= User.find(params[:user_id] || params[:id])
       end
 
       def course
-        @course ||= user.available_courses.select { |course| course.id == (params[:course_id] || params[:id]).to_i }.first
+        @course ||= Course.find(params[:course_id] || params[:id])
       end
 
       def lesson
         @lesson ||= Lesson.find(params[:lesson_id] || params[:id])
       end
 
-      def render_error(id)
+      def params_error(id)
         { error: I18n.t('errors.field_not_found', kind: controller_name.classify, id: id) }
       end
 

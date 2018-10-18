@@ -1,23 +1,46 @@
 module Api
   module V1
     class LessonsController < Api::V1::ApplicationController
-      before_action :find_user, only: :index
       before_action :check_params, only: :index
-      before_action :find_lesson, only: :show
-
 
       def index
         render json: available_lessons
       end
 
       def show
-        render json: @lesson
+        render json: lesson
+      end
+
+      def create
+        lesson = Lesson.new(lesson_params)
+
+        if lesson.save
+          render json: lesson, status: :created
+        else
+          render json: { status: :error, error: lesson.errors}
+        end
+      end
+
+      def update
+        if lesson.update(lesson_params)
+          render json: lesson
+        else
+          render json: { status: :error, error: lesson.errors}
+        end
+      end
+
+      def destroy
+        lesson.destroy
       end
 
       private
 
+      def lesson_params
+        params.require(:lesson).permit(:course_id, :label, :description)
+      end
+
       def available_lessons
-        return Lesson.all unless @user
+        return Lesson.all unless user
         user_lessons
       end
 
@@ -27,11 +50,11 @@ module Api
       end
 
       def user_lessons
-        available_courses = @user.available_courses.select { |course| course.id == params[:course_id].to_i }
+        available_courses = user.available_courses.select { |c| c.id == course.id }
 
         return [] unless available_courses.present?
-        @course = available_courses.first
-        @course.lessons.map { |lesson| lesson_data(lesson) }
+        @promo_code = (user.promo_codes & course.promo_codes).first
+        course.lessons.take(@promo_code.lessons_size).map { |lesson| lesson_data(lesson) }
       end
 
       def lesson_data(lesson)
@@ -39,7 +62,7 @@ module Api
           id: lesson.id,
           label: lesson.label,
           description: lesson.description,
-          available_to: I18n.l(@course.available_date_to(user: @user))
+          available_to: I18n.l(@promo_code.end_date)
         }
       end
     end

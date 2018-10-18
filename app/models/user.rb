@@ -9,11 +9,7 @@ class User < ApplicationRecord
     "#{first_name} #{middle_name} #{last_name}"
   end
 
-  def courses
-    promo_codes.map(&:course)
-  end
-
   def available_courses
-    promo_codes.map { |promo_code| promo_code.course.available_to?(user: self) && promo_code.course }
+    promo_codes.map { |promo_code| promo_code.end_date > Date.today && promo_code.course }
   end
 end
