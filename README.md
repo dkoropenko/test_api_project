@@ -59,7 +59,19 @@ Things you may want to cover:
         будет содержать пустой массив.
         http://localhost:3000/api/v1/lessons?user_id=3&course_id=13
         
+        http://localhost:3000/api/v1/promo_code
+        http://localhost:3000/api/v1/promo_code/id
+        
+        Реализация "покупки" пользователем промокода на курс
+        Если неуказан какой-либо из параметров, будет возвращена ошибка
+        http://localhost:3000//api/v1/buy_promo_code?user_id=3&promo_code_id=13
+        
  - V2
+ 
+        Реализован CRUD для всех моделей. 
+        Текже реализована иерархическая структура доступа ко всем урокам
+        пользователя. Соответсвенно на каждом шаге в ответе будут содержаться 
+        только доступные пользователю данные (курсы, уроки)
   
          http://localhost:3000/api/v2/users
          http://localhost:3000/api/v2/users/:id
@@ -70,5 +82,3 @@ Things you may want to cover:
          http://localhost:3000/api/v2/users/:user_id/courses/:course_id/lessons
          http://localhost:3000/api/v2/users/:user_id/courses/:course_id/lessons/:id
          
-         Соответсвенно соблюдена иерархия и для конкретного пользователя ответ будет 
-         содержать данные, которые доступны этому пользователю. 
